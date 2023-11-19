@@ -21,6 +21,8 @@
     <body class="antialiased">
         @livewire('book-form')
 
+        @livewire('book-list')
+
         @livewireScripts
     </body>
 </html>
