@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('author');
-            $table->string('comments')->default('');
-            $table->float('rating');
-            $table->year('publication_year')->default(null);
+            $table->string('comments')->nullable();
+            $table->float('rating')->nullable();
+            $table->year('publication_year')->nullable();
             $table->timestamps();
         });
     }

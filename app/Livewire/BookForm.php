@@ -4,18 +4,21 @@ namespace App\Livewire;
 
 use App\Models\Book;
 use App\Models\Tag;
+use Illuminate\Support\Carbon;
 use Livewire\Component;
 
 class BookForm extends Component
 {
+    public $title, $author, $comments, $rating, $publication_year, $tags = [];
+
     public function submit()
     {
         $validatedData = $this->validate([
-            'title' => 'required|max:255',
-            'author' => 'required|max:255',
-            'comments' => 'max:255',
-            'rating' => 'float|max:10',
-            'publication_year' => 'nullable|date'
+            'title' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
+            'comments' => 'nullable|string|max:255',
+            'rating' => ['nullable', 'numeric', 'max:10', 'regex:/^\d+(\.\d{1})?$/'],
+            'publication_year' => 'nullable|numeric|digits:4|between:1900,' . Carbon::now()->year
         ]);
 
         $book = Book::create($validatedData);

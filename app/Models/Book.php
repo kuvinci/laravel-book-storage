@@ -11,11 +11,6 @@ class Book extends Model
 
     protected $fillable = ['title', 'author', 'comments', 'rating', 'publication_year'];
 
-    public function create($validatedData)
-    {
-        dd($validatedData);
-    }
-
     public function tags()
     {
         return $this->belongsToMany(Tag::class);
