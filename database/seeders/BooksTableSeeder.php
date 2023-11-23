@@ -22,7 +22,7 @@ class BooksTableSeeder extends Seeder
                 'title' => $faker->sentence(3, true),
                 'author' => $faker->name,
                 'comments' => $faker->text(200),
-                'rating' => $faker->randomFloat(1, 1, 10),
+                'rating' => $faker->numberBetween(1, 10),
                 'publication_year' => $faker->year('now')
             ]);
 
