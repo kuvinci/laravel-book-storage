@@ -4,7 +4,6 @@ namespace App\Livewire;
 
 use App\Models\Book;
 use Livewire\Component;
-use Livewire\WithPagination;
 
 class BookList extends Component
 {
