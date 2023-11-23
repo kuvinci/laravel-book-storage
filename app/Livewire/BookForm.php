@@ -27,6 +27,7 @@ class BookForm extends Component
         // Reset form fields or perform further actions
         $this->reset();
     }
+
     public function render()
     {
         return view('livewire.book-form', [

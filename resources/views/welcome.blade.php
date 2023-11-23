@@ -20,6 +20,7 @@
     </head>
     <body class="antialiased">
         @livewire('book-form')
+        @livewire('tag-form')
 
         @livewire('book-list')
 
