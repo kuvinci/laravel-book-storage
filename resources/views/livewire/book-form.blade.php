@@ -19,8 +19,15 @@
         </div>
 
         <div>
-            <label for="rating" class="block text-sm font-medium leading-6 text-gray-900">Rating (0-10)</label>
-            <input wire:model="rating" id="rating" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <label for="rating" class="block text-sm font-medium text-gray-700">Rating</label>
+            <div class="flex">
+                <div id="rating" class="flex">
+                    @for ($i = 1; $i <= 10; $i++)
+                        <i wire:click="$set('rating', {{ $i }})" class="fas fa-star cursor-pointer text-2xl {{ $i <= $rating ? 'text-yellow-400' : 'text-gray-300' }}"></i>
+                    @endfor
+                </div>
+                <span class="ml-2 text-2xl">{{ $rating }}/10</span>
+            </div>
             @error('rating') <span class="text-red-500">{{ $message }}</span> @enderror
         </div>
 
@@ -31,12 +38,15 @@
         </div>
 
         <div>
-            <label for="tags" class="block text-sm font-medium text-gray-700">Tags</label>
-            <select wire:model="tags" id="tags" multiple class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-                @foreach($allTags as $tag)
-                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
-                @endforeach
-            </select>
+            <label for="tags" class="block text-sm font-medium text-gray-700 mb-1">Tags</label>
+            @foreach ($allTags as $tag)
+                <span
+                    wire:click="toggleTag({{ $tag->id }})"
+                    class="cursor-pointer inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 {{ in_array($tag->id, $tags) ? 'bg-yellow-400' : '' }}"
+                >
+                    {{ $tag->name }}
+                </span>
+            @endforeach
         </div>
 
         <div class="flex justify-end">

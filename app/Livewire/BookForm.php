@@ -9,7 +9,16 @@ use Livewire\Component;
 
 class BookForm extends Component
 {
-    public $title, $author, $comments, $rating, $publication_year, $tags = [];
+    public $title, $author, $comments, $rating = 1, $publication_year, $tags = [];
+
+    public function toggleTag($tagId)
+    {
+        if (in_array($tagId, $this->tags)) {
+            $this->tags = array_diff($this->tags, [$tagId]);
+        } else {
+            $this->tags[] = $tagId;
+        }
+    }
 
     public function submit()
     {
@@ -17,8 +26,8 @@ class BookForm extends Component
             'title' => 'required|string|max:255',
             'author' => 'required|string|max:255',
             'comments' => 'nullable|string|max:255',
-            'rating' => ['nullable', 'numeric', 'max:10', 'regex:/^\d+(\.\d{1})?$/'],
-            'publication_year' => 'nullable|numeric|digits:4|between:1900,' . Carbon::now()->year
+            'rating' => 'nullable|integer|min:1|max:10',
+            'publication_year' => 'nullable|numeric|digits:4|between:1900,'.Carbon::now()->year
         ]);
 
         $book = Book::create($validatedData);
