@@ -9,7 +9,23 @@ use Livewire\Component;
 
 class BookForm extends Component
 {
-    public $title, $author, $comments, $rating = 1, $publication_year, $tags = [];
+    public $book_id, $title, $author, $comments, $rating = 1, $publication_year, $tags = [];
+    public $isEditing = false;
+
+    public function mount($bookId = null)
+    {
+        if($bookId){
+            $book = Book::findOrFail($bookId);
+            $this->book_id = $book->id;
+            $this->title = $book->title;
+            $this->author = $book->author;
+            $this->comments = $book->comments;
+            $this->rating = $book->rating;
+            $this->publication_year = $book->publication_year;
+            $this->tags = $book->tags->pluck('id')->toArray();
+            $this->isEditing = true;
+        }
+    }
 
     public function toggleTag($tagId)
     {
@@ -30,11 +46,18 @@ class BookForm extends Component
             'publication_year' => 'nullable|numeric|digits:4|between:1900,'.Carbon::now()->year
         ]);
 
-        $book = Book::create($validatedData);
-        $book->tags()->attach($this->tags);
+        if($this->isEditing){
+            $book = Book::find($this->book_id);
+            $book->update($validatedData);
+            $book->tags()->sync($this->tags);
 
-        // Reset form fields or perform further actions
-        $this->reset();
+            $this->dispatch('flash-message', ['message' => 'Book successfully edited.']);
+        } else {
+            $book = Book::create($validatedData);
+            $book->tags()->attach($this->tags);
+
+            $this->redirect('/');
+        }
     }
 
     public function render()

@@ -21,13 +21,12 @@
 
     @vite('resources/css/app.css')
 </head>
-<body class="antialiased">
+<body class="antialiased bg-gray-200">
 
 <header class="bg-blue-500 text-white">
     <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
         <a class="text-xl font-semibold" href="{{ url('/') }}">BookDatabase</a>
         <ul class="flex items-center">
-            <li><a class="px-3 py-2 hover:bg-blue-700 rounded" href="{{ route('home-page') }}">Home</a></li>
             <li><a class="px-3 py-2 hover:bg-blue-700 rounded" href="{{ route('add-book') }}">Add Book</a></li>
             <li><a class="px-3 py-2 hover:bg-blue-700 rounded" href="{{ route('add-tag') }}">Add Tag</a></li>
         </ul>
@@ -35,3 +34,13 @@
 </header>
 
 <div class="main-content container mx-auto px-6 py-6">
+
+    <div x-data="{ open: false, message: '' }" @flash-message.window="message = $event.detail[0].message; open = true; setTimeout(() => open = false, 3000);">
+        <template x-if="open">
+            <div
+                id="notification"
+                class="fixed top-0 left-1/2 top-7 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded">
+                <p x-text="message"></p>
+            </div>
+        </template>
+    </div>
