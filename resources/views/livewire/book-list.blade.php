@@ -1,9 +1,41 @@
 <div class="container mx-auto">
+    <div class="w-full flex justify-center py-5">
+        <div class="bg-white w-full flex items-center rounded-full shadow-lg">
+            <input class="rounded-l-full w-full py-4 px-6 text-gray-700 leading-tight outline-none" id="search" type="text" wire:model.live.debounce.500ms="search" placeholder="Search">
 
-    <ul class="grid grid-cols-3 gap-5">
+            <div class="p-4">
+                <button class="bg-blue-500 text-white rounded-full p-2 hover:bg-blue-400 focus:outline-none w-12 h-12 flex items-center justify-center">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-full flex justify-center mb-5 flex-wrap">
+        <button
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2 shadow-lg"
+            wire:click="$set('tag', '')"
+        >
+            All
+        </button>
+
+        @foreach($tags as $tag)
+            <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2 shadow-lg"
+                wire:click="$set('tag', '{{ $tag->name }}')"
+            >
+                {{ $tag->name }}
+            </button>
+        @endforeach
+    </div>
+
+    <ul class="grid grid-cols-2 gap-5">
         @foreach ($books as $book)
-            <li class="flex flex-col justify-between shadow-md p-4 bg-white rounded-md">
+            <li class="flex flex shadow-md p-4 bg-white rounded-md">
                 <div>
+                    <img src="https://placehold.co/240x310" class="pr-4 max-w-60" alt="Book Cover">
+                </div>
+                <div class="flex flex-col">
                     <div class="flex items-center justify-between">
                         <h3 class="text-lg font-semibold text-blue-600 mb-2">{{ $book->title }}</h3>
                         <div class="flex">
@@ -35,16 +67,17 @@
                         @endforeach
                     </div>
                     @endif
+
+                    <div class="flex items-center mt-2">
+                        <div id="rating" class="flex">
+                            @for ($i = 1; $i <= 10; $i++)
+                            <i class="fas fa-star text-xl {{ $i <= $book->rating ? 'text-yellow-400' : 'text-gray-300' }}"></i>
+                            @endfor
+                        </div>
+                        <span class="ml-2 text-l">{{ $book->rating }}/10</span>
+                    </div>
                 </div>
 
-                <div class="flex items-center mt-2">
-                    <div id="rating" class="flex">
-                        @for ($i = 1; $i <= 10; $i++)
-                        <i class="fas fa-star text-xl {{ $i <= $book->rating ? 'text-yellow-400' : 'text-gray-300' }}"></i>
-                        @endfor
-                    </div>
-                    <span class="ml-2 text-l">{{ $book->rating }}/10</span>
-                </div>
             </li>
         @endforeach
     </ul>
