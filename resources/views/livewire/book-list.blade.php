@@ -1,7 +1,7 @@
 <div class="container mx-auto">
     <div class="w-full flex justify-center py-5">
         <div class="bg-white w-full flex items-center rounded-full shadow-lg">
-            <input class="rounded-l-full w-full py-4 px-6 text-gray-700 leading-tight outline-none" id="search" type="text" wire:model.live.debounce.500ms="search" placeholder="Search">
+            <input class="rounded-l-full w-full py-4 px-9 text-gray-700 leading-tight outline-none" id="search" type="text" wire:model.live.debounce.500ms="search" placeholder="Search">
 
             <div class="p-4">
                 <button class="bg-blue-500 text-white rounded-full p-2 hover:bg-blue-400 focus:outline-none w-12 h-12 flex items-center justify-center">
@@ -33,7 +33,7 @@
         @foreach ($books as $book)
             <li class="flex flex shadow-md p-4 bg-white rounded-md">
                 <div>
-                    <img src="https://placehold.co/240x310" class="pr-4 max-w-60" alt="Book Cover">
+                    <img src="{{ $book->cover_image }}" class="pr-4 max-w-60" alt="Book Cover">
                 </div>
                 <div class="flex flex-col">
                     <div class="flex items-center justify-between">

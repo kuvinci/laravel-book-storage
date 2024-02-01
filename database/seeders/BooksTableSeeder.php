@@ -21,6 +21,7 @@ class BooksTableSeeder extends Seeder
             $bookId = DB::table('books')->insertGetId([
                 'title' => $faker->sentence(3, true),
                 'author' => $faker->name,
+                'cover_image' => "https://kuvinci-book-bucket.s3.eu-central-1.amazonaws.com/default.jpg",
                 'comments' => $faker->text(200),
                 'rating' => $faker->numberBetween(1, 10),
                 'publication_year' => $faker->year('now')
