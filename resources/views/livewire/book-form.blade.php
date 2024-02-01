@@ -49,6 +49,15 @@
             @endforeach
         </div>
 
+        <div>
+            @if ($cover_image)
+                <img src="{{ $cover_image->temporaryUrl() }}" class="w-6">
+            @endif
+            <label for="cover_image" class="block text-sm font-medium leading-6 text-gray-900">Title</label>
+            <input wire:model="cover_image" type="file" class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            @error('cover_image') <span class="text-red-500">{{ $message }}</span> @enderror
+        </div>
+
         <div class="flex justify-end">
             <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 rounded-md text-white">Submit</button>
         </div>

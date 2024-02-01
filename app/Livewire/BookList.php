@@ -59,7 +59,7 @@ class BookList extends Component
             });
         }
 
-        $this->books = $query->get();
+        $this->books = $query->get()->reverse();
     }
 
     public function render()

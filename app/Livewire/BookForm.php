@@ -5,11 +5,15 @@ namespace App\Livewire;
 use App\Models\Book;
 use App\Models\Tag;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class BookForm extends Component
 {
-    public $book_id, $title, $author, $comments, $rating = 1, $publication_year, $tags = [];
+    use WithFileUploads;
+
+    public $book_id, $title, $author, $cover_image, $comments, $rating = 1, $publication_year, $tags = [];
     public $isEditing = false;
 
     public function mount($bookId = null)
@@ -19,6 +23,7 @@ class BookForm extends Component
             $this->book_id = $book->id;
             $this->title = $book->title;
             $this->author = $book->author;
+            $this->cover_image = $book->cover_image;
             $this->comments = $book->comments;
             $this->rating = $book->rating;
             $this->publication_year = $book->publication_year;
@@ -43,7 +48,8 @@ class BookForm extends Component
             'author' => 'required|string|max:255',
             'comments' => 'nullable|string|max:255',
             'rating' => 'nullable|integer|min:1|max:10',
-            'publication_year' => 'nullable|numeric|digits:4|between:1900,'.Carbon::now()->year
+            'publication_year' => 'nullable|numeric|digits:4|between:1900,'.Carbon::now()->year,
+            'cover_image' => 'nullable|image|max:1024',
         ]);
 
         if($this->isEditing){
@@ -53,11 +59,29 @@ class BookForm extends Component
 
             $this->dispatch('flash-message', ['message' => 'Book successfully edited.']);
         } else {
+            $validatedData = $this->handleBookCover($validatedData);
+
             $book = Book::create($validatedData);
             $book->tags()->attach($this->tags);
 
             $this->redirect('/');
         }
+    }
+
+    /**
+     * Handle the book cover image and update the validated data accordingly.
+     *
+     * @param  array  $validatedData  The validated data of the book.
+     * @return array The updated validated data with the cover image URL.
+     */
+    protected function handleBookCover(array $validatedData) : array {
+        $imageName = time().'_'.$this->cover_image->getClientOriginalName();
+
+        $this->cover_image->storeAs('book_covers', $imageName, 's3');
+        $s3Url = Storage::disk('s3')->url('book_covers/'.$imageName);
+
+        $validatedData['cover_image'] = $s3Url;
+        return $validatedData;
     }
 
     public function render()
