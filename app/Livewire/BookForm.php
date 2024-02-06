@@ -13,7 +13,15 @@ class BookForm extends Component
 {
     use WithFileUploads;
 
-    public $book_id, $title, $author, $cover_image, $comments, $rating = 1, $publication_year, $tags = [];
+    public $book_id;
+    public $title;
+    public $author;
+    public $cover_image;
+    public $cover_image_file;
+    public $comments;
+    public $rating = 1;
+    public $publication_year;
+    public $tags = [];
     public $isEditing = false;
 
     public function mount($bookId = null)
@@ -49,10 +57,12 @@ class BookForm extends Component
             'comments' => 'nullable|string|max:255',
             'rating' => 'nullable|integer|min:1|max:10',
             'publication_year' => 'nullable|numeric|digits:4|between:1900,'.Carbon::now()->year,
-            'cover_image' => 'nullable|image|max:1024',
+            'cover_image_file' => 'nullable|image|max:1024',
         ]);
 
         if($this->isEditing){
+            $validatedData = $this->handleBookCover($validatedData);
+
             $book = Book::find($this->book_id);
             $book->update($validatedData);
             $book->tags()->sync($this->tags);
@@ -63,9 +73,9 @@ class BookForm extends Component
 
             $book = Book::create($validatedData);
             $book->tags()->attach($this->tags);
-
-            $this->redirect('/');
         }
+
+        $this->redirect('/');
     }
 
     /**
@@ -74,10 +84,15 @@ class BookForm extends Component
      * @param  array  $validatedData  The validated data of the book.
      * @return array The updated validated data with the cover image URL.
      */
-    protected function handleBookCover(array $validatedData) : array {
-        $imageName = time().'_'.$this->cover_image->getClientOriginalName();
+    private function handleBookCover(array $validatedData) : array {
+        if(is_null($this->cover_image_file)){
+            $validatedData['cover_image'] = $this->cover_image;
+            return $validatedData;
+        }
 
-        $this->cover_image->storeAs('book_covers', $imageName, 's3');
+        $imageName = time().'_'.$this->cover_image_file->getClientOriginalName();
+
+        $this->cover_image_file->storeAs('book_covers', $imageName, 's3');
         $s3Url = Storage::disk('s3')->url('book_covers/'.$imageName);
 
         $validatedData['cover_image'] = $s3Url;

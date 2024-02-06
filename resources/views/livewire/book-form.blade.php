@@ -42,7 +42,7 @@
             @foreach ($allTags as $tag)
                 <span
                     wire:click="toggleTag({{ $tag->id }})"
-                    class="cursor-pointer inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 {{ in_array($tag->id, $tags) ? 'bg-yellow-400' : '' }}"
+                    class="cursor-pointer inline-block bg-gray-200 hover:bg-yellow-400 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 {{ in_array($tag->id, $tags) ? 'bg-yellow-400' : '' }}"
                 >
                     {{ $tag->name }}
                 </span>
@@ -50,12 +50,14 @@
         </div>
 
         <div>
-            @if ($cover_image)
-                <img src="{{ $cover_image->temporaryUrl() }}" class="w-6">
+            @if ($cover_image_file)
+                <img src="{{ $cover_image_file->temporaryUrl() }}" class="w-24 py-1.5">
+            @elseif ($cover_image)
+                <img src="{{ $cover_image }}" class="w-24 py-1.5">
             @endif
-            <label for="cover_image" class="block text-sm font-medium leading-6 text-gray-900">Title</label>
-            <input wire:model="cover_image" type="file" class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-            @error('cover_image') <span class="text-red-500">{{ $message }}</span> @enderror
+            <label for="cover_image_file" class="block text-sm font-medium leading-6 text-gray-900">Title</label>
+            <input wire:model="cover_image_file" type="file" class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            @error('cover_image_file') <span class="text-red-500">{{ $message }}</span> @enderror
         </div>
 
         <div class="flex justify-end">

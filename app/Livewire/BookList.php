@@ -5,9 +5,12 @@ namespace App\Livewire;
 use App\Models\Book;
 use App\Models\Tag;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class BookList extends Component
 {
+    use WithPagination;
+
     public $books;
 
     public $search = '';
@@ -33,15 +36,15 @@ class BookList extends Component
 
     public function updatedSearch()
     {
-        if ($this->search != '') {
-            $this->books = Book::where('title', 'like', '%'.$this->search.'%')
-                ->orWhere('author', 'like', '%'.$this->search.'%')
-                ->orWhere('publication_year', 'like', '%'.$this->search.'%')
-                ->get();
-        }
-        else {
+        if(empty($this->search)){
             $this->fetchData();
+            return;
         }
+
+        $this->books = Book::where('title', 'like', '%'.$this->search.'%')
+            ->orWhere('author', 'like', '%'.$this->search.'%')
+            ->orWhere('publication_year', 'like', '%'.$this->search.'%')
+            ->get();
     }
 
     public function updatedTag()
