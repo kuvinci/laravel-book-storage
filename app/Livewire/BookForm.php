@@ -22,7 +22,6 @@ class BookForm extends Component
     public $cover_image_file;
     public $suggested_cover_image;
     public $book_covers;
-    public $test_cover = "https://m.media-amazon.com/images/I/81tBoQP5V+L._AC_UF1000,1000_QL80_.jpg";
     public $comments;
     public $rating = 1;
     public $publication_year;
@@ -110,7 +109,7 @@ class BookForm extends Component
     public function suggestBookCovers()
     {
         $googleSearchService = new GoogleSearchServiceProvider();
-        $searchResult = $googleSearchService->search($this->title);
+        $searchResult = $googleSearchService->search($this->title, " book cover");
 
         $this->book_covers = $this->formatBookCoversList($searchResult['items']);
     }

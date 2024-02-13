@@ -19,13 +19,13 @@ class GoogleSearchServiceProvider extends ServiceProvider
         $this->searchEngineId = env('GOOGLE_SEARCH_ENGINE_ID');
     }
 
-    public function search($query)
+    public function search($query, $suffix)
     {
         $response = $this->client->request('GET', 'https://www.googleapis.com/customsearch/v1', [
             'query' => [
                 'key' => $this->apiKey,
                 'cx' => $this->searchEngineId,
-                'q' => $query,
+                'q' => $query . $suffix,
                 'searchType' => 'image'
             ]
         ]);
