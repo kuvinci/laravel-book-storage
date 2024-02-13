@@ -4,10 +4,12 @@ namespace App\Livewire;
 
 use App\Models\Book;
 use App\Models\Tag;
+use App\Providers\GoogleSearchServiceProvider;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class BookForm extends Component
 {
@@ -18,6 +20,9 @@ class BookForm extends Component
     public $author;
     public $cover_image;
     public $cover_image_file;
+    public $suggested_cover_image;
+    public $book_covers;
+    public $test_cover = "https://m.media-amazon.com/images/I/81tBoQP5V+L._AC_UF1000,1000_QL80_.jpg";
     public $comments;
     public $rating = 1;
     public $publication_year;
@@ -85,18 +90,48 @@ class BookForm extends Component
      * @return array The updated validated data with the cover image URL.
      */
     private function handleBookCover(array $validatedData) : array {
-        if(is_null($this->cover_image_file)){
+        if(is_null($this->cover_image_file) && is_null($this->suggested_cover_image)){
             $validatedData['cover_image'] = $this->cover_image;
             return $validatedData;
         }
+        $imageFileObj = $this->suggested_cover_image ? $this->convertBookCoverUrlToFile() : $this->cover_image_file;
 
-        $imageName = time().'_'.$this->cover_image_file->getClientOriginalName();
-
-        $this->cover_image_file->storeAs('book_covers', $imageName, 's3');
-        $s3Url = Storage::disk('s3')->url('book_covers/'.$imageName);
-
-        $validatedData['cover_image'] = $s3Url;
+        $validatedData['cover_image'] = $this->saveAndGetS3URL($imageFileObj);
         return $validatedData;
+    }
+
+    private function saveAndGetS3URL($imageFileObj) : string
+    {
+        $imageName = time().'_'.$imageFileObj->getClientOriginalName();
+        Storage::disk('s3')->put('book_covers/'.$imageName, file_get_contents($imageFileObj->getRealPath()));
+        return Storage::disk('s3')->url('book_covers/'.$imageName);
+    }
+
+    public function suggestBookCovers()
+    {
+        $googleSearchService = new GoogleSearchServiceProvider();
+        $searchResult = $googleSearchService->search($this->title);
+
+        $this->book_covers = $this->formatBookCoversList($searchResult['items']);
+    }
+
+    private function formatBookCoversList(array $searchItems) : array
+    {
+        return array_column($searchItems, 'link');
+    }
+
+    public function saveSuggestedBookCover($imageURL)
+    {
+        $this->suggested_cover_image = $imageURL;
+    }
+
+    private function convertBookCoverUrlToFile() : UploadedFile
+    {
+        $data = file_get_contents($this->suggested_cover_image);
+        $tempPath = tempnam(sys_get_temp_dir(), 'image');
+        file_put_contents($tempPath, $data);
+
+        return new UploadedFile($tempPath, 'temporary_book_cover.jpg', 'image/jpeg', null, true);
     }
 
     public function render()

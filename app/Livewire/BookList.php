@@ -12,7 +12,6 @@ class BookList extends Component
     use WithPagination;
 
     public $books;
-
     public $search = '';
     public $tags;
     public $tag;

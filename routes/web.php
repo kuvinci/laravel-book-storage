@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\GoogleSearchController;
 use Illuminate\Support\Facades\Route;
 
 /*

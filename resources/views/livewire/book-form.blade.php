@@ -55,10 +55,22 @@
             @elseif ($cover_image)
                 <img src="{{ $cover_image }}" class="w-24 py-1.5">
             @endif
-            <label for="cover_image_file" class="block text-sm font-medium leading-6 text-gray-900">Title</label>
+            <label for="cover_image_file" class="block text-sm font-medium leading-6 text-gray-900">Book Cover</label>
             <input wire:model="cover_image_file" type="file" class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             @error('cover_image_file') <span class="text-red-500">{{ $message }}</span> @enderror
         </div>
+
+        <div class="flex">
+            <button wire:click="suggestBookCovers" type="button" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 rounded-md text-white">Suggest Book Cover</button>
+        </div>
+
+        <img wire:click="saveSuggestedBookCover('{{$test_cover}}')" src="{{$test_cover}}" alt="Book Cover" class="w-64 py-1.5">
+
+        @if ($book_covers)
+            @foreach ($book_covers as $cover)
+                <img src="{{$cover}}" alt="Book Cover">
+            @endforeach
+        @endif
 
         <div class="flex justify-end">
             <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 rounded-md text-white">Submit</button>
