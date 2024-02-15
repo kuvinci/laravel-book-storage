@@ -28,9 +28,9 @@ class BookForm extends Component
     public $tags = [];
     public $isEditing = false;
 
-    public function mount($bookId = null)
+    public function mount($bookId = null): void
     {
-        if($bookId){
+        if ($bookId) {
             $book = Book::findOrFail($bookId);
             $this->book_id = $book->id;
             $this->title = $book->title;
@@ -44,7 +44,7 @@ class BookForm extends Component
         }
     }
 
-    public function toggleTag($tagId)
+    public function toggleTag($tagId): void
     {
         if (in_array($tagId, $this->tags)) {
             $this->tags = array_diff($this->tags, [$tagId]);
@@ -53,7 +53,7 @@ class BookForm extends Component
         }
     }
 
-    public function submit()
+    public function submit(): void
     {
         $validatedData = $this->validate([
             'title' => 'required|string|max:255',
@@ -64,22 +64,34 @@ class BookForm extends Component
             'cover_image_file' => 'nullable|image|max:1024',
         ]);
 
-        if($this->isEditing){
-            $validatedData = $this->handleBookCover($validatedData);
-
-            $book = Book::find($this->book_id);
-            $book->update($validatedData);
-            $book->tags()->sync($this->tags);
-
-            $this->dispatch('flash-message', ['message' => 'Book successfully edited.']);
+        if ($this->isEditing) {
+            $this->editBook($validatedData);
         } else {
-            $validatedData = $this->handleBookCover($validatedData);
-
-            $book = Book::create($validatedData);
-            $book->tags()->attach($this->tags);
+            $this->createBook($validatedData);
         }
 
         $this->redirect('/');
+    }
+
+    private function editBook($validatedData): void
+    {
+        $validatedData = $this->handleBookCover($validatedData);
+
+        $book = Book::find($this->book_id);
+        $book->update($validatedData);
+        $book->tags()->sync($this->tags);
+
+        $this->dispatch('flash-message', ['message' => 'Book successfully edited.']);
+    }
+
+    private function createBook($validatedData): void
+    {
+        $validatedData = $this->handleBookCover($validatedData);
+
+        $book = Book::create($validatedData);
+        $book->tags()->attach($this->tags);
+
+        $this->dispatch('flash-message', ['message' => 'Book successfully created.']);
     }
 
     /**
@@ -88,8 +100,9 @@ class BookForm extends Component
      * @param  array  $validatedData  The validated data of the book.
      * @return array The updated validated data with the cover image URL.
      */
-    private function handleBookCover(array $validatedData) : array {
-        if(is_null($this->cover_image_file) && is_null($this->suggested_cover_image)){
+    private function handleBookCover(array $validatedData): array
+    {
+        if (is_null($this->cover_image_file) && is_null($this->suggested_cover_image)) {
             $validatedData['cover_image'] = $this->cover_image;
             return $validatedData;
         }
@@ -99,32 +112,46 @@ class BookForm extends Component
         return $validatedData;
     }
 
-    private function saveAndGetS3URL($imageFileObj) : string
+    /**
+     * Saves the given image file object to AWS S3 and returns the URL to the saved image.
+     *
+     * @param $imageFileObj - The image file object to be saved to S3.
+     *
+     * @return string The URL of the saved image in AWS S3.
+     */
+    private function saveAndGetS3URL($imageFileObj): string
     {
         $imageName = time().'_'.$imageFileObj->getClientOriginalName();
         Storage::disk('s3')->put('book_covers/'.$imageName, file_get_contents($imageFileObj->getRealPath()));
         return Storage::disk('s3')->url('book_covers/'.$imageName);
     }
 
-    public function suggestBookCovers()
+    /**
+     * Calls the Google Search API to suggest book covers based on the title of the book and updates the book_covers property.
+     *
+     * @return void
+     */
+    public function suggestBookCovers(): void
     {
         $googleSearchService = new GoogleSearchServiceProvider();
         $searchResult = $googleSearchService->search($this->title, " book cover");
-
         $this->book_covers = $this->formatBookCoversList($searchResult['items']);
     }
 
-    private function formatBookCoversList(array $searchItems) : array
+    private function formatBookCoversList(array $searchItems): array
     {
         return array_column($searchItems, 'link');
     }
 
-    public function saveSuggestedBookCover($imageURL)
+    public function saveSuggestedBookCover(string $imageURL): void
     {
         $this->suggested_cover_image = $imageURL;
     }
 
-    private function convertBookCoverUrlToFile() : UploadedFile
+    /**
+     * @return UploadedFile The UploadedFile object representing the temporary book cover file.
+     */
+    private function convertBookCoverUrlToFile(): UploadedFile
     {
         $data = file_get_contents($this->suggested_cover_image);
         $tempPath = tempnam(sys_get_temp_dir(), 'image');

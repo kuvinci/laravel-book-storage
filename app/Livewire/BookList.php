@@ -12,11 +12,11 @@ class BookList extends Component
     use WithPagination;
 
     public $books;
-    public $search = '';
+    public $search;
     public $tags;
     public $tag;
 
-    public function remove($bookId)
+    public function remove($bookId): void
     {
         if ($bookId) {
             Book::destroy($bookId);
@@ -27,13 +27,13 @@ class BookList extends Component
         }
     }
 
-    public function mount()
+    public function mount(): void
     {
         $this->tags = Tag::all();
         $this->fetchData();
     }
 
-    public function updatedSearch()
+    public function updatedSearch(): void
     {
         if(empty($this->search)){
             $this->fetchData();
@@ -43,15 +43,16 @@ class BookList extends Component
         $this->books = Book::where('title', 'like', '%'.$this->search.'%')
             ->orWhere('author', 'like', '%'.$this->search.'%')
             ->orWhere('publication_year', 'like', '%'.$this->search.'%')
-            ->get();
+            ->get()
+            ->reverse();
     }
 
-    public function updatedTag()
+    public function updatedTag(): void
     {
         $this->fetchData();
     }
 
-    public function fetchData()
+    public function fetchData(): void
     {
         $query = Book::with('tags');
 

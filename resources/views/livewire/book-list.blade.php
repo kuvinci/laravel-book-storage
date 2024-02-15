@@ -35,15 +35,15 @@
                 <div>
                     <img src="{{ $book->cover_image }}" class="pr-4 max-w-60" alt="Book Cover">
                 </div>
-                <div class="flex flex-col">
+                <div class="flex flex-col w-full">
                     <div class="flex items-center justify-between">
                         <h3 class="text-lg font-semibold text-blue-600 mb-2">{{ $book->title }}</h3>
                         <div class="flex">
-                            <a href="{{ route('edit-book', ['bookId' => $book->id]) }}" class="fas fa-edit cursor-pointer ml-4 p-1 text-gray-600 hover:text-blue-600"></a>
+                            <a href="{{ route('edit-book', ['bookId' => $book->id]) }}" class="fas fa-edit cursor-pointer ml-4 mb-2 p-2 text-gray-600 hover:text-blue-600"></a>
                             <i
                                 wire:click="remove({{ $book->id }})"
                                 wire:confirm="Are you sure you want to delete this book?"
-                                class="fa fa-trash cursor-pointer p-1 text-gray-600 hover:text-red-600">
+                                class="fa fa-trash cursor-pointer p-2 mb-2 text-gray-600 hover:text-red-600">
                             </i>
                         </div>
                     </div>
