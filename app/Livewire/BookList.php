@@ -11,7 +11,7 @@ class BookList extends Component
 {
     use WithPagination;
 
-    public $books;
+    public $bookIDs;
     public $search;
     public $tags;
     public $tag;
@@ -49,10 +49,11 @@ class BookList extends Component
 
     public function updatedTag(): void
     {
+        $this->resetPage();
         $this->fetchData();
     }
 
-    public function fetchData(): void
+    private function fetchData(): void
     {
         $query = Book::with('tags');
 
@@ -62,11 +63,22 @@ class BookList extends Component
             });
         }
 
-        $this->books = $query->get()->reverse();
+        $this->bookIDs = $query->get()->pluck('id')->reverse()->toArray();
+    }
+
+    private function prepareBooks()
+    {
+        return Book::with('tags')
+            ->whereIn('id', $this->bookIDs)
+            ->orderBy('id','desc')
+            ->paginate(12);
     }
 
     public function render()
     {
-        return view('livewire.book-list');
+        $books = $this->prepareBooks();
+        return view('livewire.book-list', [
+            'books' => $books
+        ]);
     }
 }

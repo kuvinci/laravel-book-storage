@@ -19,12 +19,12 @@
             All
         </button>
 
-        @foreach($tags as $tag)
+        @foreach($tags as $tagObj)
             <button
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2 shadow-lg"
-                wire:click="$set('tag', '{{ $tag->name }}')"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2 shadow-lg {{ $tagObj->name == $tag ? 'bg-blue-700' : '' }}"
+                wire:click="$set('tag', '{{ $tagObj->name }}')"
             >
-                {{ $tag->name }}
+                {{ $tagObj->name }}
             </button>
         @endforeach
     </div>
@@ -63,7 +63,7 @@
                     <div class="mt-1">
                         <span class="text-sm font-medium text-gray-700">Tags:</span>
                         @foreach ($book->tags as $tag)
-                        <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">{{ $tag->name }}</span>
+                            <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">{{ $tag->name }}</span>
                         @endforeach
                     </div>
                     @endif
@@ -81,4 +81,8 @@
             </li>
         @endforeach
     </ul>
+
+    <div class="pagination my-4">
+        {{ $books->links() }}
+    </div>
 </div>
