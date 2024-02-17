@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
 
@@ -14,22 +13,21 @@ class GoogleSearchServiceProvider extends ServiceProvider
 
     public function __construct()
     {
-        $this->client = new Client();
+        $this->client = new Http();
         $this->apiKey = env('GOOGLE_API_KEY');
         $this->searchEngineId = env('GOOGLE_SEARCH_ENGINE_ID');
     }
 
     public function search($query, $suffix)
     {
-        $response = $this->client->request('GET', 'https://www.googleapis.com/customsearch/v1', [
-            'query' => [
-                'key' => $this->apiKey,
-                'cx' => $this->searchEngineId,
-                'q' => $query . $suffix,
-                'searchType' => 'image'
-            ]
+
+        $response = Http::get('https://www.googleapis.com/customsearch/v1', [
+            'key' => $this->apiKey,
+            'cx' => $this->searchEngineId,
+            'q' => $query . $suffix,
+            'searchType' => 'image',
         ]);
 
-        return json_decode($response->getBody()->getContents(), true);
+        return $response->collect()->get('items');
     }
 }

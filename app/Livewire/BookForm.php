@@ -135,12 +135,7 @@ class BookForm extends Component
     {
         $googleSearchService = new GoogleSearchServiceProvider();
         $searchResult = $googleSearchService->search($this->title, " book cover");
-        $this->book_covers = $this->formatBookCoversList($searchResult['items']);
-    }
-
-    private function formatBookCoversList(array $searchItems): array
-    {
-        return array_column($searchItems, 'link');
+        $this->book_covers = array_column($searchResult, 'link');
     }
 
     public function saveSuggestedBookCover(string $imageURL): void
