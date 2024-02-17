@@ -62,9 +62,9 @@
             @error('cover_image_file') <span class="text-red-500">{{ $message }}</span> @enderror
         </div>
 
-        <div class="flex items-end">
-            <button wire:click="suggestBookCovers" type="button" class="px-4 py-2 mr-2 bg-blue-500 hover:bg-blue-700 rounded-md text-white">Suggest Book Cover</button>
-            <span class="text-xs italic"><span class="text-red-600">*</span> Current API limit {{$apiLimit}}/100</span>
+        <div class="flex flex-col items-start">
+            <button wire:click="suggestBookCovers" type="button" class="px-4 py-2 mb-2 bg-blue-500 hover:bg-blue-700 rounded-md text-white">Suggest Book Cover</button>
+            <span class="text-xs italic"><span class="text-red-600">*</span> Today's suggestions limit {{$apiLimit}}/100</span>
         </div>
 
         @if ($book_covers && !$suggested_cover_image)

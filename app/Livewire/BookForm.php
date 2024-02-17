@@ -137,8 +137,14 @@ class BookForm extends Component
      */
     public function suggestBookCovers(): void
     {
+        if($this->book_covers){
+            $this->dispatch('flash-message', ['message' => 'Please choose the book cover from already suggested.']);
+            return;
+        }
+
         $apiLimitCounter = intval(config('options.counter'));
         if($apiLimitCounter >= 100){
+            $this->dispatch('flash-message', ['message' => 'Unfortunately the daily API limit reached.']);
             return;
         }
 
