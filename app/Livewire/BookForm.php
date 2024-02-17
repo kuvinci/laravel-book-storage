@@ -161,6 +161,16 @@ class BookForm extends Component
     }
 
     /**
+     * Unsets the suggested book covers to make sure that the user can re-suggest covers if title is updates.
+     *
+     * @return void
+     */
+    public function unsetSuggestedBookCovers(): void
+    {
+        unset($this->book_covers);
+    }
+
+    /**
      * @return UploadedFile The UploadedFile object representing the temporary book cover file.
      */
     private function convertBookCoverUrlToFile(): UploadedFile

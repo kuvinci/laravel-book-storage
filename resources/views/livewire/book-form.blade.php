@@ -2,7 +2,7 @@
     <form wire:submit.prevent="submit" class="space-y-4 shadow-md p-4 bg-white rounded-md">
         <div>
             <label for="title" class="block text-sm font-medium leading-6 text-gray-900">Title</label>
-            <input wire:model="title" id="title" type="text" class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <input wire:model="title" wire:keydown="unsetSuggestedBookCovers" id="title" type="text" class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             @error('title') <span class="text-red-500">{{ $message }}</span> @enderror
         </div>
 
