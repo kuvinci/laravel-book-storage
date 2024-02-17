@@ -20,7 +20,6 @@ class GoogleSearchServiceProvider extends ServiceProvider
 
     public function search($query, $suffix)
     {
-
         $response = Http::get('https://www.googleapis.com/customsearch/v1', [
             'key' => $this->apiKey,
             'cx' => $this->searchEngineId,

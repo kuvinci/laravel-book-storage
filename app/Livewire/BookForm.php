@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Book;
 use App\Models\Tag;
 use App\Providers\GoogleSearchServiceProvider;
+use App\Models\Options;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -27,6 +28,7 @@ class BookForm extends Component
     public $publication_year;
     public $tags = [];
     public $isEditing = false;
+    public $apiLimit;
 
     public function mount($bookId = null): void
     {
@@ -41,6 +43,8 @@ class BookForm extends Component
             $this->publication_year = $book->publication_year;
             $this->tags = $book->tags->pluck('id')->toArray();
             $this->isEditing = true;
+        } else {
+            $this->apiLimit = config('options.counter');
         }
     }
 
@@ -133,9 +137,16 @@ class BookForm extends Component
      */
     public function suggestBookCovers(): void
     {
+        $apiLimitCounter = intval(config('options.counter'));
+        if($apiLimitCounter >= 100){
+            return;
+        }
+
         $googleSearchService = new GoogleSearchServiceProvider();
         $searchResult = $googleSearchService->search($this->title, " book cover");
         $this->book_covers = array_column($searchResult, 'link');
+
+        Options::setOption('counter', ++$apiLimitCounter);
     }
 
     public function saveSuggestedBookCover(string $imageURL): void
