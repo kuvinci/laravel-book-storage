@@ -8,23 +8,40 @@ use Livewire\Component;
 
 class TagForm extends Component
 {
-    public $name, $slug;
+    public $name, $slug, $id;
 
-    public function updatedName($value)
+    public function mount($tagId = null): void
+    {
+        if(!$tagId){
+            return;
+        }
+
+        $tag = Tag::findOrFail($tagId);
+        $this->name = $tag->name;
+        $this->slug = $tag->slug;
+        $this->id = $tag->id;
+    }
+
+    public function updatedName($value): void
     {
         $this->slug = Str::slug($value);
     }
 
-    public function submit()
+    public function submit(): void
     {
         $validatedData = $this->validate([
             'name' => 'required|string|max:255|unique:tags,name',
             'slug' => 'required|string|max:255|unique:tags,slug',
         ]);
 
-        Tag::create($validatedData);
+        if($this->id){
+            $tag = Tag::find($this->id);
+            $tag->update($validatedData);
+        } else {
+            Tag::create($validatedData);
+        }
 
-        $this->reset();
+        redirect()->route('tags');
     }
 
     public function render()

@@ -74,7 +74,7 @@ class BookForm extends Component
             $this->createBook($validatedData);
         }
 
-        $this->redirect('/');
+        redirect()->route('home-page');
     }
 
     private function editBook($validatedData): void

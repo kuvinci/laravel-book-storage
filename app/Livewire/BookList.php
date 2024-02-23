@@ -18,13 +18,15 @@ class BookList extends Component
 
     public function remove($bookId): void
     {
-        if ($bookId) {
-            Book::destroy($bookId);
-
-            // Reset books list
-            $this->fetchData();
-            $this->dispatch('flash-message', ['message' => 'Book successfully deleted.']);
+        if (!$bookId) {
+            return;
         }
+
+        Book::destroy($bookId);
+
+        // Reset books list
+        $this->fetchData();
+        $this->dispatch('flash-message', ['message' => 'Book successfully deleted.']);
     }
 
     public function mount(): void

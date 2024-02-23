@@ -28,7 +28,7 @@
         <a class="text-xl font-semibold" href="{{ url('/') }}">BookDatabase</a>
         <ul class="flex items-center">
             <li><a class="px-3 py-2 hover:bg-blue-700 rounded" href="{{ route('add-book') }}">Add Book</a></li>
-            <li><a class="px-3 py-2 hover:bg-blue-700 rounded" href="{{ route('add-tag') }}">Add Tag</a></li>
+            <li><a class="px-3 py-2 hover:bg-blue-700 rounded" href="{{ route('tags') }}">Tags</a></li>
         </ul>
     </nav>
 </header>
