@@ -20,7 +20,7 @@ Route::get('/', function () {
     return view('home-page');
 })->name('home-page');
 
-Route::get('/books/add', [BookController::class, 'create'])->name('add-book');
+Route::get('/books/add', [BookController::class, 'index'])->name('add-book');
 Route::get('/books/edit/{bookId}', [BookController::class, 'edit'])->name('edit-book');
 
 Route::get('/tags', [TagController::class, 'index'])->name('tags');
