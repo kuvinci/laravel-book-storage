@@ -10,28 +10,28 @@ This project allows users to manage books they've read and categorize them.
 
 ## Key areas to focus on:
 - *app*
-  - *Console*
-    - **Kernel.php**
-  - *Livewire*
-    - **BookForm.php**
-    - **BookList.php**
-    - **TagForm.php**
-  - *Models*
-    - **Options.php**
-  - *Providers*
-    - **GoogleSearchServiceProvider.php**
-    - **OptionsServiceProvider**
+    - *Console*
+        - [**Kernel.php**](https://github.com/kuvinci/laravel-book-storage/blob/master/app/Console/Kernel.php)
+    - *Livewire*
+        - [**BookForm.php**](https://github.com/kuvinci/laravel-book-storage/blob/master/app/Livewire/BookForm.php)
+        - [**BookList.php**](https://github.com/kuvinci/laravel-book-storage/blob/master/app/Livewire/BookList.php)
+        - [**TagForm.php**](https://github.com/kuvinci/laravel-book-storage/blob/master/app/Livewire/TagForm.php)
+    - *Models*
+        - [**Options.php**](https://github.com/kuvinci/laravel-book-storage/blob/master/app/Models/Options.php)
+    - *Providers*
+        - [**GoogleSearchServiceProvider.php**](https://github.com/kuvinci/laravel-book-storage/blob/master/app/Providers/GoogleSearchServiceProvider.php)
+        - [**OptionsServiceProvider**](https://github.com/kuvinci/laravel-book-storage/blob/master/app/Providers/OptionsServiceProvider.php)
 - *database*
-  - *seeders*
-    - **all of them**
+    - *seeders*
+        - [**all of them**](https://github.com/kuvinci/laravel-book-storage/tree/master/database/seeders)
 - *resources*
-  - *views*
-    - *livewire*
-      - **all of them**
+    - *views*
+        - *livewire*
+            - [**all of them**](https://github.com/kuvinci/laravel-book-storage/tree/master/resources/views/livewire)
 - *tests*
-  - *Unit*
-    - **BookFormTest.php**
-    - **TagFormTest.php**
+    - *Unit*
+        - [**BookFormTest.php**](https://github.com/kuvinci/laravel-book-storage/blob/master/tests/Unit/BookFormTest.php)
+        - [**TagFormTest.php**](https://github.com/kuvinci/laravel-book-storage/blob/master/tests/Unit/TagFormTest.php)
 
 ## Setup
 - Clone this repository.
